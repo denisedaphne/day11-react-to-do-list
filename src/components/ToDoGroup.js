@@ -1,4 +1,3 @@
-import ToDoItem from "./ToDoItem";
 import { Divider, List, Typography } from 'antd';
 const ToDoGroup= (props) => {
     return (
