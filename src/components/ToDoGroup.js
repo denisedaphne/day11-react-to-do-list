@@ -1,10 +1,19 @@
 import ToDoItem from "./ToDoItem";
-
+import { Divider, List, Typography } from 'antd';
 const ToDoGroup= (props) => {
     return (
         <div>
-            {props.todoListItems.map((item, index) => <ToDoItem key={index} input={item}/>)}
+            <List
+                bordered
+                dataSource={props.todoListItems}
+                renderItem={(item) => (
+                <List.Item>
+                <Typography.Text mark></Typography.Text> {item}
+                </List.Item>
+                )}
+            />          
         </div>
+
     );
 }
 
