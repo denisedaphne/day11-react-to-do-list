@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Button, Input, Space } from 'antd';
+import { useDispatch } from "react-redux";
+import { addTodo } from '../components/ToDoReducer';
+import { v4 as uuidv4} from 'uuid';
+
 
 const ToDoGenerator = (props) => {
+    const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState("");
     
     const addTodoItem = () => {
-        props.onInputChange(inputValue);
+        dispatch(addTodo({text: inputValue, id: uuidv4(), done: false}));
         setInputValue("");
     }
 
