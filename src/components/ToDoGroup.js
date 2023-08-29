@@ -1,4 +1,6 @@
-import { List, Typography } from 'antd';
+import { List } from 'antd';
+import React from 'react';
+import ToDoItem from './ToDoItem';
 
 const ToDoGroup= (props) => {
     return (
@@ -8,7 +10,7 @@ const ToDoGroup= (props) => {
                 dataSource={props.todoListItems}
                 renderItem={(item) => (
                 <List.Item>
-                <Typography.Text mark>{item.done ? 'done' : 'not done'}</Typography.Text> {item.text}
+                    <ToDoItem id={item.id} text={item.text} done={item.done} />
                 </List.Item>
                 )}
             />          
