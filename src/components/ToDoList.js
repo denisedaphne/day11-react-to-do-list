@@ -1,16 +1,20 @@
-import { useState } from "react";
-import TodoGenerator from "./ToDoGenerator";
-import TodoGroup from "./ToDoGroup";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import ToDoGroup from './ToDoGroup';
+import ToDoGenerator from './ToDoGenerator';
 
 const TodoList = () => {
-    const [toDoListItems, setTodoListItems] = useState([]);
+    const todosList = useSelector((state) => 
+        state.todos
+    )
 
-    return (
-        <>
-        <TodoGroup todoListItems={toDoListItems}/>
-        <TodoGenerator onInputChange={(input)=>  setTodoListItems(toDoListItems.concat(input))}/>
-        </>
-    );
-}
+  return (
+    <>
+      <ToDoGroup todoListItems={todosList} />
+      <ToDoGenerator />
+    </>
+  );
+};
+
 
 export default TodoList;
