@@ -1,10 +1,16 @@
 .App {
   text-align: center;
-  font-family: 'Times New Roman';
+  font-family: 'Georgia';
 }
 
 body {
   background-image: url('simple-line-bg.jpg');
+  background-size: cover;
+}
+
+.toDoList {
+  align-items: center; 
+  margin: auto; 
 }
 
 .App-logo {
