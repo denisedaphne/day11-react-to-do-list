@@ -1,12 +1,25 @@
+import { Menu } from "antd";
+import { Outlet, NavLink } from "react-router-dom";
 import './App.css';
-import ToDoList from './components/ToDoList';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Todo List</h1>
-      <ToDoList/>
-    </div>
+    <>
+      <div className="nav-bar">
+        <Menu mode="horizontal">
+          <Menu.Item key="home">
+            <NavLink to={'/'}>Home</NavLink>
+          </Menu.Item>
+          <Menu.Item key="done">
+            <NavLink to={'/done'}>Done List</NavLink>
+          </Menu.Item>
+          <Menu.Item key="help">
+            <NavLink to={'/help'}>Help</NavLink>
+          </Menu.Item>
+        </Menu>
+      </div>
+      <Outlet />
+    </>
   );
 }
 
