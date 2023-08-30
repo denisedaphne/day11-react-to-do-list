@@ -1,34 +1,88 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { toggleTodo, deleteTodo } from './ToDoReducer';
-import { Typography, Button } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
-import '../App.css';
+import { DeleteFilled, EditFilled } from "@ant-design/icons";
+import { Card, Col, Input, Modal, Row, Popconfirm, Button } from "antd";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import * as todoApi from "../api/todoApi";
+import "./css/TodoItem.css";
+import { resetTodoList } from "./ToDoReducer";
 
-const ToDoItem = (props) => {
+const TodoItem = (props) => {
     const dispatch = useDispatch();
+    const [updateValue, setUpdateValue] = useState("");
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
-    const handleToggle = () => {
-        dispatch(toggleTodo(props.id));
+    const onTriggerToggle = async () => {
+        await todoApi.updateTodoTask(props.todo.id, { done: !props.todo.done });
+        const response = await todoApi.getTodoTasks();
+        dispatch(resetTodoList(response.data));
     };
 
-    const handleDelete = () => {
-        if (window.confirm('Are you sure you want to delete this todo?')) {
-            dispatch(deleteTodo(props.id));
-        }
+    const handleUpdateConfirm = async () => {
+        await todoApi.updateTodoTask(props.todo.id, { text: updateValue });
+        const response = await todoApi.getTodoTasks();
+        dispatch(resetTodoList(response.data));
+        setIsUpdateModalVisible(false);
+        setUpdateValue("");
+    }
+
+    const handleDeleteConfirm = async () => {
+        await todoApi.deleteTodoTask(props.todo.id);
+        const response = await todoApi.getTodoTasks();
+        dispatch(resetTodoList(response.data));
+        setIsDeleteModalVisible(false);
     };
-    
+
+    const showUpdateModal = () => {
+        setIsUpdateModalVisible(true);
+    };
+
+    const handleUpdateCancel = () => {
+        setUpdateValue("");
+        setIsUpdateModalVisible(false);
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteModalVisible(false);
+    };
+
+    const currentDate = new Date().toISOString().split("T")[0];
+
     return (
-        <div className='toDoList'>
-            <Typography.Text 
-                style={{ textDecoration: props.done ? 'line-through' : 'none'}}
-                onClick={handleToggle}
-                >
-                    {props.text}  
-            </Typography.Text> &nbsp;
-            <Button type="primary" danger icon={<DeleteFilled />} onClick={handleDelete}/>
-        </div>
+        <Card bordered = {true} style={{width: 700, display:"flex", justifyContent: "center", margin:"auto"}}>
+            {props.todo.done && "done"}
+            <Row justify="center" align="middle" gutter={[16, 8]}>
+                <Col span={20} onClick={onTriggerToggle}><p>{currentDate}: {props.todo.text}</p></Col>
+                <Col>
+                    <Button type="primary" onClick={showUpdateModal}><EditFilled /></Button>
+                    <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        onConfirm={handleDeleteConfirm}
+                        onCancel={handleDeleteCancel}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                    <Button type="primary" danger><DeleteFilled /></Button>
+                    </Popconfirm>
+                </Col>
+            </Row>
+            
+            <Modal
+                title="Update Todo"
+                open={isUpdateModalVisible}
+                onOk={handleUpdateConfirm}
+                onCancel={handleUpdateCancel}
+            >
+                <p>What do you want to update?</p>
+                <Input
+                    value={updateValue}
+                    onChange={(input) => setUpdateValue(input.target.value)}
+                    placeholder="Please input here"
+                />
+            </Modal>
+        </Card>
     );
-}
+};
 
-export default ToDoItem;
+export default TodoItem;
