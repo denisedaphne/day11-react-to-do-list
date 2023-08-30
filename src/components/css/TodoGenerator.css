@@ -1,0 +1,18 @@
+.todoGenerator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    margin: auto;
+  }
+  
+  .todoGenerator button {
+    cursor: pointer;
+  }
+  
+  .floating-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
