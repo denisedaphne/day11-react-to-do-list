@@ -1,27 +1,48 @@
+import { Button, Input, Space, notification } from 'antd';
 import { useState } from "react";
-import { Button, Input, Space } from 'antd';
 import { useDispatch } from "react-redux";
-import { addTodo } from '../components/ToDoReducer';
-import { v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import * as todoApi from "../api/todoApi";
+import "./css/TodoGenerator.css";
+import { resetTodoList } from "./ToDoReducer";
 
-
-const ToDoGenerator = (props) => {
-    const dispatch = useDispatch();
+const TodoGenerator = () => {
+    const dispatch = useDispatch()
+    const [api, contextHolder] = notification.useNotification();
     const [inputValue, setInputValue] = useState("");
-    
-    const addTodoItem = () => {
-        dispatch(addTodo({text: inputValue, id: uuidv4(), done: false}));
-        setInputValue("");
+
+    const handleTodoItem = async () => {
+        if (inputValue.trim() === '') {
+            api.error({
+                message: 'Error',
+                description:
+                    'Please enter an item to proceed!',
+                duration: 2,
+            });
+        } else {
+            await todoApi.addTodoTask(
+                {
+                    id: uuidv4(),
+                    text: inputValue,
+                    done: false
+                }
+            );
+            const response = await todoApi.getTodoTasks();
+            dispatch(resetTodoList(response.data));
+            setInputValue("");
+        }
     }
 
     return (
-        <div>
-            <Space.Compact>
-                <Input value={inputValue} onChange={event => setInputValue(event.target.value)} />
-                <Button onClick={addTodoItem} type="primary">Add</Button>
-            </Space.Compact>
-        </div>
+        <Space.Compact className="todoGenerator">
+            {contextHolder}
+            <Input
+                value={inputValue}
+                onChange={event => setInputValue(event.target.value)}
+            />
+            <Button type="primary" onClick={handleTodoItem}>Submit</Button>
+        </Space.Compact>
     );
-}
+};
 
-export default ToDoGenerator;
+export default TodoGenerator;
