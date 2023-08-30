@@ -1,0 +1,11 @@
+.todoItem {
+    border: 1px solid #ccc;
+
+    &.done {
+        text-decoration: line-through;
+    }
+}
+
+div.ant-card-body {
+    width: 100%;
+}
