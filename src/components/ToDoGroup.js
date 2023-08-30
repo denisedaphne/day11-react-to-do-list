@@ -1,22 +1,16 @@
-import { List } from 'antd';
-import React from 'react';
-import ToDoItem from './ToDoItem';
+import { shallowEqual, useSelector } from "react-redux";
+import TodoItem from "./ToDoItem";
+import "./css/TodoGroup.css";
 
-const ToDoGroup= (props) => {
+const TodoGroup = () => {
+    const todoList = useSelector((state) => state.todo.todoList.filter(todo => !todo.done), shallowEqual)
     return (
-        <div>
-            <List
-                bordered
-                dataSource={props.todoListItems}
-                renderItem={(item) => (
-                <List.Item>
-                    <ToDoItem id={item.id} text={item.text} done={item.done} />
-                </List.Item>
-                )}
-            />          
-        </div>
-
+        <ul>
+            {todoList.map((todo) => (
+                <TodoItem key={todo.id} todo={todo} />
+            ))}
+        </ul>
     );
-}
+};
 
-export default ToDoGroup;
+export default TodoGroup;
